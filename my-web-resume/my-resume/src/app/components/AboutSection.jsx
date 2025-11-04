@@ -62,7 +62,7 @@ const AboutSection = () => {
             working with JavaScript, React, Redux, Node.js, Express, PostgreSQL,
              HTML, CSS, and Git. I am a quick learner and I am always
             looking to expand my knowledge and skill sets. I am a team player and
-            I am excited to work with others to create amazing applications.
+            I am excited to work with others to create amazing Software applications.
           </p>
 
           <div className="flex flex-row justify-start mt-8">
