@@ -1,9 +1,18 @@
 import React, { useState } from 'react'
-import NavBar from './NavBar.jsx'
-import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
+import axios from 'axios'
 import { toast } from 'react-hot-toast'
-import { FiPlus, FiX, FiTag, FiLock, FiGlobe, FiSave, FiArrowLeft, FiFileText } from 'react-icons/fi'
+import NavBar from './NavBar.jsx'
+import { 
+  FiArrowLeft, 
+  FiSave, 
+  FiTag, 
+  FiLock, 
+  FiGlobe, 
+  FiFileText,
+  FiX,
+  FiPlus
+} from 'react-icons/fi'
 
 const CreateNotePage = () => {
   const navigate = useNavigate()
@@ -20,7 +29,9 @@ const CreateNotePage = () => {
     color: 'bg-gradient-to-br from-blue-50 to-blue-100'
   })
   
-  // Available colors for note cards
+  const [errors, setErrors] = useState({})
+
+  // Available colors
   const colorOptions = [
     { name: 'Blue', value: 'bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200', label: 'bg-blue-100' },
     { name: 'Green', value: 'bg-gradient-to-br from-emerald-50 to-emerald-100 border-emerald-200', label: 'bg-emerald-100' },
@@ -57,6 +68,11 @@ const CreateNotePage = () => {
       ...prev,
       [name]: type === 'checkbox' ? checked : value
     }))
+    
+    // Clear error for this field
+    if (errors[name]) {
+      setErrors(prev => ({ ...prev, [name]: '' }))
+    }
   }
 
   // Handle tag input key press
@@ -69,67 +85,224 @@ const CreateNotePage = () => {
 
   // Validate form
   const validateForm = () => {
-    const errors = {}
+    const newErrors = {}
     
     if (!formData.title.trim()) {
-      errors.title = 'Title is required'
+      newErrors.title = 'Title is required'
     } else if (formData.title.length < 3) {
-      errors.title = 'Title must be at least 3 characters'
+      newErrors.title = 'Title must be at least 3 characters'
     }
     
     if (!formData.content.trim()) {
-      errors.content = 'Content is required'
+      newErrors.content = 'Content is required'
     } else if (formData.content.length < 10) {
-      errors.content = 'Content must be at least 10 characters'
+      newErrors.content = 'Content must be at least 10 characters'
     }
     
-    return Object.keys(errors).length === 0
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
   }
 
-  // Handle form submission
-  const handleSubmit = async (e) => {
-    e.preventDefault()
+  // Handle form submission - DIRECT API CALL
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault()
     
-    if (!validateForm()) {
-      toast.error('Please fill in all required fields correctly')
-      return
-    }
+  //   if (!validateForm()) {
+  //     toast.error('Please fix the errors in the form')
+  //     return
+  //   }
     
-    setLoading(true)
+  //   setLoading(true)
     
-    try {
-      const noteData = {
-        title: formData.title.trim(),
-        content: formData.content.trim(),
-        category: formData.category.trim() || 'General',
-        tags: formData.tags,
-        isPublic: formData.isPublic,
-        color: formData.color
+  //   try {
+  //     // Prepare data for API
+  //     const noteData = {
+  //       title: formData.title.trim(),
+  //       content: formData.content.trim(),
+  //       category: formData.category.trim() || 'General',
+  //       tags: formData.tags,
+  //       isPublic: formData.isPublic,
+  //       color: formData.color
+  //     }
+      
+  //     console.log('📤 Sending note data:', noteData)
+      
+  //     // DIRECT API CALL - NO SERVICE FILE
+  //     const response = await axios.post('http://localhost:3000/api/notes', noteData, {
+  //       headers: {
+  //         'Content-Type': 'application/json'
+  //       }
+  //     })
+      
+  //     console.log('✅ Note created successfully:', response.data)
+  //     toast.success('✨ Note created successfully!')
+      
+  //     // Reset form
+  //     setFormData({
+  //       title: '',
+  //       content: '',
+  //       category: '',
+  //       tags: [],
+  //       tagInput: '',
+  //       isPublic: false,
+  //       color: 'bg-gradient-to-br from-blue-50 to-blue-100'
+  //     })
+      
+  //     // Navigate to home page
+  //     navigate('/')
+      
+  //   } catch (error) {
+  //     console.error('❌ Error creating note:', error)
+      
+  //     // Handle specific error responses
+  //     if (error.response) {
+  //       // Server responded with error status
+  //       console.error('Backend error response:', error.response.data)
+        
+  //       switch (error.response.status) {
+  //         case 400:
+  //           // Bad Request - show validation errors from backend
+  //           const backendErrors = error.response.data.errors || error.response.data.message
+  //           if (backendErrors) {
+  //             toast.error(`Validation error: ${JSON.stringify(backendErrors)}`)
+  //           } else {
+  //             toast.error('Invalid data. Please check your inputs.')
+  //           }
+  //           break
+            
+  //         case 401:
+  //           toast.error('Please log in to create notes')
+  //           navigate('/')
+  //           break
+            
+  //         case 409:
+  //           toast.error('A note with this title already exists')
+  //           break
+            
+  //         case 500:
+  //           toast.error('Server error. Please try again later.')
+  //           break
+            
+  //         default:
+  //           toast.error('Failed to create note')
+  //       }
+  //     } else if (error.request) {
+  //       // Request was made but no response
+  //       console.error('No response received:', error.request)
+  //       toast.error('Network error. Please check your connection.')
+  //     } else {
+  //       // Something else happened
+  //       console.error('Request setup error:', error.message)
+  //       toast.error('An unexpected error occurred')
+  //     }
+  //   } finally {
+  //     setLoading(false)
+  //   }
+  // }
+
+  
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  
+  if (!validateForm()) {
+    toast.error('Please fix the errors in the form');
+    return;
+  }
+  
+  setLoading(true);
+  
+  try {
+    // ⚠️ FIXED: Send only what the backend expects
+    const noteData = {
+      title: formData.title.trim(),
+      content: formData.content.trim(),
+      tags: formData.tags,
+      // Remove category, isPublic - backend doesn't have these
+      // Keep color but transform to hex format
+      color: extractHexColor(formData.color) || '#ffffff'
+      // favorite and archived will use defaults from schema
+    };
+    
+    console.log('📤 Sending note data:', noteData);
+    console.log('📤 JSON string being sent:', JSON.stringify(noteData));
+    
+    // Add timeout to debug
+    const response = await axios.post('http://localhost:3000/api/notes', noteData, {
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      timeout: 10000 // 10 second timeout
+    });
+    
+    console.log('✅ Note created successfully:', response.data);
+    toast.success('✨ Note created successfully!');
+    
+    // Reset form
+    setFormData({
+      title: '',
+      content: '',
+      category: '',
+      tags: [],
+      tagInput: '',
+      isPublic: false,
+      color: 'bg-gradient-to-br from-blue-50 to-blue-100'
+    });
+    
+    // Navigate to home page
+    navigate('/');
+    
+  } catch (error) {
+    console.error('❌ Full error object:', error);
+    
+    if (error.code === 'ECONNABORTED') {
+      toast.error('Request timeout. Server might be down.');
+    } else if (error.response) {
+      console.error('Server error response:', error.response.data);
+      
+      if (error.response.status === 400) {
+        // Check if it's a JSON parse error
+        if (error.response.data.error?.includes('Invalid JSON')) {
+          console.error('JSON Parse Error! The data sent was:', noteData);
+          console.error('JSON string that failed:', JSON.stringify(noteData));
+          toast.error('JSON format error. Please check the data being sent.');
+        } else {
+          toast.error(`Validation error: ${JSON.stringify(error.response.data)}`);
+        }
+      } else {
+        toast.error(`Error ${error.response.status}: ${error.response.data.error || 'Server error'}`);
       }
-      
-      const response = await axios.post('http://localhost:3000/api/notes', noteData)
-      
-      toast.success('✨ Note created successfully!')
-      
-      // Reset form
-      setFormData({
-        title: '',
-        content: '',
-        category: '',
-        tags: [],
-        tagInput: '',
-        isPublic: false,
-        color: 'bg-gradient-to-br from-blue-50 to-blue-100'
-      })
-      
-      // Navigate to home
-      setTimeout(() => navigate('/'), 1500)
-      
-    } catch (error) {
-      console.error('Error creating note:', error)
-      toast.error(error.response?.data?.message || 'Failed to create note')
-    } finally {
-      setLoading(false)
+    } else if (error.request) {
+      console.error('No response received. Request:', error.request);
+      toast.error('Network error. Check if backend server is running.');
+    } else {
+      console.error('Error setting up request:', error.message);
+      toast.error('Failed to create note');
+    }
+  } finally {
+    setLoading(false);
+  }
+};
+ const extractHexColor = (cssClass) => {
+  // Map CSS classes to hex colors
+  const colorMap = {
+    'bg-gradient-to-br from-blue-50 to-blue-100': '#dbeafe',
+    'bg-gradient-to-br from-emerald-50 to-emerald-100': '#d1fae5',
+    'bg-gradient-to-br from-purple-50 to-purple-100': '#f3e8ff',
+    'bg-gradient-to-br from-amber-50 to-amber-100': '#fef3c7',
+    'bg-gradient-to-br from-rose-50 to-rose-100': '#ffe4e6',
+    'bg-gradient-to-br from-cyan-50 to-cyan-100': '#cffafe'
+  };
+  return colorMap[cssClass] || '#ffffff';
+};
+
+  // Handle cancel/back
+  const handleCancel = () => {
+    if (formData.title || formData.content) {
+      if (window.confirm('Are you sure? Your changes will be lost')) {
+        navigate(-1)
+      }
+    } else {
+      navigate(-1)
     }
   }
 
@@ -139,7 +312,7 @@ const CreateNotePage = () => {
       
       <div className='max-w-6xl mx-auto px-4 sm:px-6 py-8'>
         {/* Header */}
-        <div className='mb-10'>
+        <div className='mb-8'>
           <button
             onClick={() => navigate(-1)}
             className='inline-flex items-center text-gray-600 hover:text-gray-900 mb-6 transition-colors group'
@@ -173,7 +346,7 @@ const CreateNotePage = () => {
               <form onSubmit={handleSubmit} className='p-8'>
                 {/* Title Field */}
                 <div className='mb-8'>
-                  <label className='block text-sm font-bold text-gray-800 mb-3'>
+                  <label className='block text-sm font-semibold text-gray-800 mb-3'>
                     Title <span className='text-red-400'>*</span>
                   </label>
                   <input
@@ -181,16 +354,19 @@ const CreateNotePage = () => {
                     name='title'
                     value={formData.title}
                     onChange={handleChange}
-                    className='w-full px-4 py-3.5 rounded-xl text-gray-800 border border-gray-200 bg-gray-50 focus:bg-white focus:border-blue-400 focus:ring-4 focus:ring-blue-50 outline-none transition-all placeholder:text-gray-400 text-black'
+                    className={`w-full px-4 py-3.5 rounded-xl border ${errors.title ? 'border-red-400' : 'border-gray-200'} bg-gray-50 focus:bg-white focus:border-blue-400 focus:ring-4 focus:ring-blue-50 outline-none transition-all placeholder:text-gray-400`}
                     placeholder='Enter a captivating title...'
                     disabled={loading}
                   />
+                  {errors.title && (
+                    <p className='mt-2 text-sm text-red-600'>{errors.title}</p>
+                  )}
                 </div>
 
                 {/* Content Field */}
                 <div className='mb-8'>
                   <div className='flex justify-between items-center mb-3'>
-                    <label className='block text-sm font-bold text-gray-800'>
+                    <label className='block text-sm font-semibold text-gray-800'>
                       Content <span className='text-red-400'>*</span>
                     </label>
                     <span className={`text-sm ${formData.content.length > 1000 ? 'text-red-500' : 'text-gray-500'}`}>
@@ -201,12 +377,15 @@ const CreateNotePage = () => {
                     name='content'
                     value={formData.content}
                     onChange={handleChange}
-                    rows='10'
+                    rows='12'
                     maxLength='1000'
-                    className='w-full px-4 py-3.5 text-gray-800 rounded-xl border border-gray-200 bg-gray-50 focus:bg-white focus:border-blue-400 focus:ring-4 focus:ring-blue-50 outline-none transition-all resize-none placeholder:text-gray-400'
+                    className={`w-full px-4 py-3.5 rounded-xl border ${errors.content ? 'border-red-400' : 'border-gray-200'} bg-gray-50 focus:bg-white focus:border-blue-400 focus:ring-4 focus:ring-blue-50 outline-none transition-all resize-none placeholder:text-gray-400`}
                     placeholder='Start typing your thoughts here...'
                     disabled={loading}
                   />
+                  {errors.content && (
+                    <p className='mt-2 text-sm text-red-600'>{errors.content}</p>
+                  )}
                 </div>
 
                 {/* Category and Tags */}
@@ -220,7 +399,7 @@ const CreateNotePage = () => {
                       name='category'
                       value={formData.category}
                       onChange={handleChange}
-                      className='w-full px-4 py-3.5 text-gray-800 rounded-xl border border-gray-200 bg-gray-50 focus:bg-white focus:border-blue-400 focus:ring-4 focus:ring-blue-50 outline-none transition-all'
+                      className='w-full px-4 py-3.5 rounded-xl border border-gray-200 bg-gray-50 focus:bg-white focus:border-blue-400 focus:ring-4 focus:ring-blue-50 outline-none transition-all'
                       disabled={loading}
                     >
                       <option value=''>Select category</option>
@@ -247,7 +426,7 @@ const CreateNotePage = () => {
                         value={formData.tagInput}
                         onChange={handleChange}
                         onKeyPress={handleTagKeyPress}
-                        className='flex-1 px-4 py-3 text-gray-800 rounded-lg border border-gray-200 bg-gray-50 focus:bg-white focus:border-blue-400 focus:ring-4 focus:ring-blue-50 outline-none transition-all'
+                        className='flex-1 px-4 py-3 rounded-lg border border-gray-200 bg-gray-50 focus:bg-white focus:border-blue-400 focus:ring-4 focus:ring-blue-50 outline-none transition-all'
                         placeholder='Add a tag...'
                         disabled={loading}
                       />
@@ -255,7 +434,7 @@ const CreateNotePage = () => {
                         type='button'
                         onClick={handleAddTag}
                         disabled={loading}
-                        className='px-4 rounded-lg bg-gradient-to-r from-blue-500 to-blue-600 text-white hover:from-blue-600 hover:to-blue-700 transition-all shadow-md hover:shadow-lg'
+                        className='px-4 rounded-lg bg-gradient-to-r from-blue-500 to-blue-600 text-white hover:from-blue-600 hover:to-blue-700 transition-all shadow-md hover:shadow-lg disabled:opacity-50'
                       >
                         <FiPlus className='w-5 h-5' />
                       </button>
@@ -274,6 +453,7 @@ const CreateNotePage = () => {
                               type='button'
                               onClick={() => handleRemoveTag(tag)}
                               className='hover:text-blue-900 transition-colors'
+                              disabled={loading}
                             >
                               <FiX className='w-3 h-3' />
                             </button>
@@ -295,7 +475,8 @@ const CreateNotePage = () => {
                         type='button'
                         key={color.name}
                         onClick={() => setFormData(prev => ({ ...prev, color: color.value }))}
-                        className={`p-4 rounded-xl border-2 transition-all hover:scale-105 hover:shadow-md ${formData.color === color.value ? 'ring-2 ring-offset-2 ring-blue-500 border-transparent' : 'border-gray-200'}`}
+                        disabled={loading}
+                        className={`p-4 rounded-xl border-2 transition-all hover:scale-105 hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed ${formData.color === color.value ? 'ring-2 ring-offset-2 ring-blue-500 border-transparent' : 'border-gray-200'}`}
                       >
                         <div className={`${color.label} w-full h-12 rounded-lg mb-2`} />
                         <span className='text-sm font-medium text-gray-700'>{color.name}</span>
@@ -346,7 +527,7 @@ const CreateNotePage = () => {
                   <div className='flex gap-4'>
                     <button
                       type='button'
-                      onClick={() => navigate(-1)}
+                      onClick={handleCancel}
                       disabled={loading}
                       className='px-8 py-3.5 rounded-xl border-2 border-gray-300 text-gray-700 font-semibold hover:bg-gray-50 hover:border-gray-400 transition-all disabled:opacity-50'
                     >
@@ -356,7 +537,7 @@ const CreateNotePage = () => {
                     <button
                       type='submit'
                       disabled={loading}
-                      className='px-8 py-3.5 rounded-xl font-semibold bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white shadow-lg hover:shadow-xl transition-all flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed'
+                      className='px-8 py-3.5 rounded-xl font-semibold bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white shadow-lg hover:shadow-xl transition-all flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed min-w-[140px] justify-center'
                     >
                       {loading ? (
                         <>
@@ -378,10 +559,10 @@ const CreateNotePage = () => {
 
           {/* Right Column - Preview */}
           <div className='lg:col-span-1'>
-            <div className='sticky top-8'>
+            <div className='sticky top-8 space-y-6'>
               {/* Preview Card */}
               <div className={`${formData.color} rounded-2xl shadow-xl border p-6 min-h-[400px] transition-all duration-300`}>
-                <h3 className='text-lg font-bold text-gray-800 mb-4'>Note Preview</h3>
+                <h3 className='text-lg font-bold text-gray-800 mb-4'>Live Preview</h3>
                 
                 <div className='space-y-6'>
                   {/* Title Preview */}
@@ -431,6 +612,43 @@ const CreateNotePage = () => {
                         <>
                           <FiLock className='w-4 h-4 text-gray-600' />
                           <span className='text-sm font-medium text-gray-700'>Private</span>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Quick Stats */}
+              <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-6">
+                <h3 className="text-lg font-bold text-gray-900 mb-4">Note Stats</h3>
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-gray-600">Characters</span>
+                    <span className="font-semibold text-gray-900">{formData.content.length}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-gray-600">Words</span>
+                    <span className="font-semibold text-gray-900">
+                      {formData.content.trim().split(/\s+/).filter(word => word.length > 0).length}
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-gray-600">Tags</span>
+                    <span className="font-semibold text-gray-900">{formData.tags.length}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-gray-600">Status</span>
+                    <div className="flex items-center gap-2">
+                      {formData.isPublic ? (
+                        <>
+                          <FiGlobe className="w-4 h-4 text-emerald-600" />
+                          <span className="font-semibold text-emerald-700">Public</span>
+                        </>
+                      ) : (
+                        <>
+                          <FiLock className="w-4 h-4 text-gray-600" />
+                          <span className="font-semibold text-gray-700">Private</span>
                         </>
                       )}
                     </div>
