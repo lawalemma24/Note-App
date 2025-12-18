@@ -298,7 +298,7 @@ const handleSubmit = async (e) => {
   // Handle cancel/back
   const handleCancel = () => {
     if (formData.title || formData.content) {
-      if (window.confirm('Are you sure? Your changes will be lost.')) {
+      if (window.confirm('Are you sure? Your changes will be lost')) {
         navigate(-1)
       }
     } else {
