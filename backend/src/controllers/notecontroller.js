@@ -132,7 +132,7 @@ export const updateNote = async (req, res) => {
     if (error.name === 'ValidationError') {
       const errors = Object.values(error.errors).map(err => err.message);
       return res.status(400).json({ 
-        error: 'Validation fail',
+        error: 'Validation failed',
         details: errors 
       });
     }
