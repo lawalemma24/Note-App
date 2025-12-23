@@ -37,7 +37,7 @@ const Dashboard = () => {
       setNotes(notesData);
       setStats(statsData);
     } catch (error) {
-      console.error('Error fetching dashboard data:', error);
+      console.error('Error fetching dashboard datas:', error);
     } finally {
       setLoading(false);
     }
