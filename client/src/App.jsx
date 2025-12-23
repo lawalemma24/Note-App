@@ -1,6 +1,6 @@
 import React from "react"
 import CreateNote from "./pages/CreateNote.jsx"
-import './app.css'
+import './App.css'
 // import UpdateNote from "./pages/UpdateNote.jsx"
 import Dashboard from "./pages/Dashboard.jsx"
 import NavBar from "./pages/NavBar.jsx"
@@ -16,7 +16,7 @@ function App() {
  
 
   return (
-    <div data-theme="dark" className="">
+    <div data-theme="dark">
     
       <div  className="min-h-screen bg-gray-50">
       <NavBar />
