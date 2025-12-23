@@ -122,7 +122,7 @@ export const updateNote = async (req, res) => {
     );
     
     if (!note) {
-      return res.status(404).json({ error: 'Note not found' });
+      return res.status(404).json({ error: 'Notes not found' });
     }
     
     res.json(note);
@@ -132,7 +132,7 @@ export const updateNote = async (req, res) => {
     if (error.name === 'ValidationError') {
       const errors = Object.values(error.errors).map(err => err.message);
       return res.status(400).json({ 
-        error: 'Validation failed',
+        error: 'Validation fail',
         details: errors 
       });
     }
