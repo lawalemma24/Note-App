@@ -127,7 +127,7 @@ export const updateNote = async (req, res) => {
     
     res.json(note);
   } catch (error) {
-    console.error('Error updating note:', error);
+    console.error('Error updating notes', error);
     
     if (error.name === 'ValidationError') {
       const errors = Object.values(error.errors).map(err => err.message);
