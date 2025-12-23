@@ -19,7 +19,7 @@ app.use(express.json());
 
 // CORS
 app.use(cors({
-  origin: 'http://localhost:5173',
+  origin: 'https://note-app-99vi-git-feat-done-jaytechs-projects-e325c32a.vercel.app/dashboard',
   credentials: true
 }));
 
