@@ -42,7 +42,7 @@ export async function deleteNote  (req, res)  {
     if (!deletedNote) {
       return res.status(404).json({ message: 'Notes are not found' });
     }
-    res.status(200).json({ message: 'Notes deleted successfully' });
+    res.status(200).json({ message: 'Note deleted successfully' });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
