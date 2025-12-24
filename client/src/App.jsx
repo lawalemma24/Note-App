@@ -6,7 +6,7 @@ import { Routes } from "react-router-dom"
 // import { toast } from "react-hot-toast"
 import { Route } from "react-router-dom"
 // import HomePage from "./pages/HomePage.jsx"
-import './app.css'
+import './App.css'
 import UpdateNote from "./pages/UpdateNote.jsx"
 
 function App() {
