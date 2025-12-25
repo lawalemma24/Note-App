@@ -109,7 +109,7 @@ const CreateNotePage = () => {
       
       const response = await axios.post('http://localhost:3000/api/notes', noteData)
       
-      toast.success('✨ Note created successfully!')
+      toast.success(' Note created successfully!')
       
       // Reset form
       setFormData({
