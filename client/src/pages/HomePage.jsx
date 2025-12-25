@@ -66,7 +66,7 @@ const HomePage = () => {
 
   const handleDeleteNote = async (noteId) => {
     try {
-      await axios.delete(`http://localhost:3000/api/notes/${noteId}`)
+      await axios.delete(`https://note-app-43qu.vercel.app/${noteId}`)
       setNotes(notes.filter(note => note._id !== noteId))
       toast.success('Note deleted successfully')
       setShowDeleteModal(false)
