@@ -107,7 +107,7 @@ const CreateNotePage = () => {
         color: formData.color
       }
       
-      const response = await axios.post('http://localhost:3000/api/notes', noteData)
+      const response = await axios.post('https://note-app-43qu.vercel.app/', noteData)
       
       toast.success(' Note created successfully!')
       

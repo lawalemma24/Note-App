@@ -35,7 +35,7 @@ const NoteDetail = () => {
   const fetchNote = async () => {
     setLoading(true)
     try {
-      const response = await axios.get(`http://localhost:3000/api/notes/${id}`)
+      const response = await axios.get(`https://note-app-43qu.vercel.app/${id}`)
       setNote(response.data)
     } catch (error) {
       console.error('Error fetching note:', error)
@@ -48,7 +48,7 @@ const NoteDetail = () => {
 
   const fetchRelatedNotes = async () => {
     try {
-      const response = await axios.get('http://localhost:3000/api/notes')
+      const response = await axios.get('https://note-app-43qu.vercel.app')
       const allNotes = response.data
       // Filter to show notes from same category (excluding current note)
       const related = allNotes
@@ -63,7 +63,7 @@ const NoteDetail = () => {
 
   const handleDelete = async () => {
     try {
-      await axios.delete(`http://localhost:3000/api/notes/${id}`)
+      await axios.delete(`https://note-app-43qu.vercel.app/${id}`)
       toast.success('Note deleted successfully')
       navigate('/')
     } catch (error) {
