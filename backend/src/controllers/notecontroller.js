@@ -52,7 +52,7 @@ export async function getAllNotesById (req, res)  {
   try {
     const note =  await Note.findById(req.params.id);
     if (!note) {
-      return res.status(404).json({ message: 'Note not found' });
+      return res.status(404).json({ message: 'NOTES ARE NOT FOUND' });
     }
     res.status(200).json(note);
   } catch (error) {
