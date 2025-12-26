@@ -38,7 +38,7 @@ const UpdateNote = () => {
   const fetchNote = async () => {
     setLoading(true)
     try {
-      const response = await axios.get(`http://localhost:3000/api/notes/${id}`)
+      const response = await axios.get(`https://note-app-43qu.vercel.app/${id}`)
       const note = response.data
       setFormData({
         title: note.title || '',
