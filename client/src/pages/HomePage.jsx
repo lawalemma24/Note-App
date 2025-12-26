@@ -29,7 +29,7 @@ const HomePage = () => {
   const fetchNotes = async () => {
     setLoading(true)
     try {
-      const response = await axios.get('http://localhost:3000/api/notes')
+      const response = await axios.get('https://note-app-43qu.vercel.app')
       setNotes(response.data)
     } catch (error) {
       console.error('Error fetching notes:', error)
