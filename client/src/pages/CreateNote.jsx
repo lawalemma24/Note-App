@@ -9,7 +9,7 @@ const CreateNotePage = () => {
   const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
 
-  const API_URL = 'http://localhost:3000/api/notes'
+  const API_URL = 'https://note-app-rbyf.vercel.app/'
 
   
   // Form state
