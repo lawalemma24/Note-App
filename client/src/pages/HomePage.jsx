@@ -18,7 +18,7 @@ const HomePage = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [noteToDelete, setNoteToDelete] = useState(null)
 
-  const API_URL = 'https://note-app-rbyf.vercel.app/'
+  const API_URL = 'https://note-app-rbyf.vercel.app/api/notes'
 
   useEffect(() => {
     fetchNotes()
