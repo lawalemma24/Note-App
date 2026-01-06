@@ -18,6 +18,8 @@ const HomePage = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [noteToDelete, setNoteToDelete] = useState(null)
 
+  const API_URL = 'http://localhost:3000/api/notes'
+
   useEffect(() => {
     fetchNotes()
   }, [])
@@ -29,7 +31,7 @@ const HomePage = () => {
   const fetchNotes = async () => {
     setLoading(true)
     try {
-      const response = await axios.get('https://note-app-43qu.vercel.app')
+      const response = await axios.get(API_URL)
       setNotes(response.data)
     } catch (error) {
       console.error('Error fetching notes:', error)
@@ -66,7 +68,7 @@ const HomePage = () => {
 
   const handleDeleteNote = async (noteId) => {
     try {
-      await axios.delete(`https://note-app-43qu.vercel.app/${noteId}`)
+      await axios.delete(`${API_URL}/${noteId}`)
       setNotes(notes.filter(note => note._id !== noteId))
       toast.success('Note deleted successfully')
       setShowDeleteModal(false)

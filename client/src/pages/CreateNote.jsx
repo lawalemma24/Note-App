@@ -8,6 +8,9 @@ import { FiPlus, FiX, FiTag, FiLock, FiGlobe, FiSave, FiArrowLeft, FiFileText } 
 const CreateNotePage = () => {
   const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
+
+  const API_URL = 'http://localhost:3000/api/notes'
+
   
   // Form state
   const [formData, setFormData] = useState({
@@ -106,11 +109,11 @@ const CreateNotePage = () => {
         isPublic: formData.isPublic,
         color: formData.color
       }
-      
-      const response = await axios.post('https://note-app-43qu.vercel.app/', noteData)
-      
-      toast.success(' Note created successfully!')
-      
+
+      const response = await axios.post(API_URL, noteData)
+
+      toast.success('Note created successfully!')
+
       // Reset form
       setFormData({
         title: '',

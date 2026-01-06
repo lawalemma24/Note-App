@@ -11,6 +11,8 @@ const UpdateNote = () => {
   const navigate = useNavigate()
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
+
+  const API_URL = 'http://localhost:3000/api/notes'
   
   // Form state
   const [formData, setFormData] = useState({
@@ -38,7 +40,7 @@ const UpdateNote = () => {
   const fetchNote = async () => {
     setLoading(true)
     try {
-      const response = await axios.get(`https://note-app-43qu.vercel.app/${id}`)
+      const response = await axios.get(`${API_URL}/${id}`)
       const note = response.data
       setFormData({
         title: note.title || '',
@@ -143,7 +145,7 @@ const UpdateNote = () => {
       }
       
       // Send PUT request to update note
-      const response = await axios.put(`http://localhost:3000/api/notes/${id}`, noteData)
+      const response = await axios.put(`${API_URL}/${id}`, noteData)
       
       toast.success('✨ Note updated successfully!')
       console.log('Note updated:', response.data)
@@ -184,7 +186,7 @@ const UpdateNote = () => {
   // Handle delete
   const handleDelete = async () => {
     try {
-      await axios.delete(`http://localhost:3000/api/notes/${id}`)
+      await axios.delete(`${API_URL}/${id}`)
       toast.success('Note deleted successfully')
       navigate('/')
     } catch (error) {
