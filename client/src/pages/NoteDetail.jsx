@@ -27,7 +27,7 @@ const NoteDetail = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [copied, setCopied] = useState(false)
 
-  const API_URL = 'https://note-app-rbyf.vercel.app/'
+  const API_URL = 'https://note-app-rbyf.vercel.app/api/notes'
 
   useEffect(() => {
     fetchNote()

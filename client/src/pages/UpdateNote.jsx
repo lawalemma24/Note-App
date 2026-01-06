@@ -12,7 +12,7 @@ const UpdateNote = () => {
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
 
-  const API_URL = 'https://note-app-rbyf.vercel.app/'
+  const API_URL = 'https://note-app-rbyf.vercel.app/api/notes'
   
   // Form state
   const [formData, setFormData] = useState({
