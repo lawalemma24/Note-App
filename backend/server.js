@@ -14,7 +14,7 @@ app.use(cors ({
     // origin: 'https://tboard-fe.vercel.app/dashboard',
     // origin: 'http://localhost:3000/api/notes',
     origin: '*',
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
     // allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true
 
